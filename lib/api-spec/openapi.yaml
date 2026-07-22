@@ -1,0 +1,691 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: Schlauchmagen Begleiter API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: progress
+    description: User progress tracking
+  - name: requirements
+    description: Requirements management
+  - name: journal
+    description: Journal entries
+  - name: appointments
+    description: Appointments
+  - name: stats
+    description: Statistics and summaries
+  - name: assessment
+    description: Eingangstest and op recommendation
+  - name: openai
+    description: OpenAI AI chat operations
+  - name: profile
+    description: User profile settings
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /requirements:
+    get:
+      operationId: listRequirements
+      tags: [requirements]
+      summary: List all requirements
+      responses:
+        "200":
+          description: List of requirements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Requirement"
+
+  /requirements/{id}/complete:
+    patch:
+      operationId: toggleRequirement
+      tags: [requirements]
+      summary: Toggle a requirement's completion status
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequirementToggle"
+      responses:
+        "200":
+          description: Updated requirement
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Requirement"
+
+  /journal:
+    get:
+      operationId: listJournalEntries
+      tags: [journal]
+      summary: List all journal entries
+      responses:
+        "200":
+          description: List of journal entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JournalEntry"
+    post:
+      operationId: createJournalEntry
+      tags: [journal]
+      summary: Create a new journal entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JournalInput"
+      responses:
+        "201":
+          description: Created entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JournalEntry"
+
+  /journal/{id}:
+    delete:
+      operationId: deleteJournalEntry
+      tags: [journal]
+      summary: Delete a journal entry
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /appointments:
+    get:
+      operationId: listAppointments
+      tags: [appointments]
+      summary: List all appointments
+      responses:
+        "200":
+          description: List of appointments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Appointment"
+    post:
+      operationId: createAppointment
+      tags: [appointments]
+      summary: Create a new appointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppointmentInput"
+      responses:
+        "201":
+          description: Created appointment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+
+  /appointments/{id}:
+    delete:
+      operationId: deleteAppointment
+      tags: [appointments]
+      summary: Delete an appointment
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /stats/overview:
+    get:
+      operationId: getOverview
+      tags: [stats]
+      summary: Get overview stats
+      responses:
+        "200":
+          description: Overview stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Overview"
+
+  /weight:
+    get:
+      operationId: listWeightEntries
+      tags: [progress]
+      summary: List all weight entries
+      responses:
+        "200":
+          description: List of weight entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WeightEntry"
+    post:
+      operationId: createWeightEntry
+      tags: [progress]
+      summary: Log a new weight entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WeightInput"
+      responses:
+        "201":
+          description: Created entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WeightEntry"
+
+  /profile:
+    get:
+      operationId: getProfile
+      tags: [profile]
+      summary: Get user profile
+      responses:
+        "200":
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+    put:
+      operationId: updateProfile
+      tags: [profile]
+      summary: Update user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserProfileInput"
+      responses:
+        "200":
+          description: Updated profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  /assessment:
+    get:
+      operationId: getLatestAssessment
+      tags: [assessment]
+      summary: Get the most recent assessment result
+      responses:
+        "200":
+          description: Latest assessment or null
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssessmentResult"
+    post:
+      operationId: submitAssessment
+      tags: [assessment]
+      summary: Submit a new assessment and get a recommendation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssessmentInput"
+      responses:
+        "201":
+          description: Assessment result with recommendation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssessmentResult"
+
+  /openai/conversations:
+    get:
+      operationId: listOpenaiConversations
+      tags: [openai]
+      summary: List all conversations
+      responses:
+        "200":
+          description: List of conversations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OpenaiConversation"
+    post:
+      operationId: createOpenaiConversation
+      tags: [openai]
+      summary: Create a new conversation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OpenaiConversationInput"
+      responses:
+        "201":
+          description: Created conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpenaiConversation"
+
+  /openai/conversations/{id}:
+    get:
+      operationId: getOpenaiConversation
+      tags: [openai]
+      summary: Get conversation with messages
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Conversation with messages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpenaiConversationWithMessages"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpenaiError"
+    delete:
+      operationId: deleteOpenaiConversation
+      tags: [openai]
+      summary: Delete a conversation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpenaiError"
+
+  /openai/conversations/{id}/messages:
+    get:
+      operationId: listOpenaiMessages
+      tags: [openai]
+      summary: List messages in a conversation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OpenaiMessage"
+    post:
+      operationId: sendOpenaiMessage
+      tags: [openai]
+      summary: Send a text message and receive a streaming text response
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OpenaiMessageInput"
+      responses:
+        "200":
+          description: SSE stream of assistant text chunks
+          content:
+            text/event-stream: {}
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    Requirement:
+      type: object
+      required: [id, title, description, category, completed, order]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        completed:
+          type: boolean
+        completedAt:
+          type: ["string", "null"]
+        order:
+          type: integer
+
+    RequirementToggle:
+      type: object
+      required: [completed]
+      properties:
+        completed:
+          type: boolean
+
+    JournalEntry:
+      type: object
+      required: [id, content, mood, createdAt]
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        mood:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    JournalInput:
+      type: object
+      required: [content]
+      properties:
+        content:
+          type: string
+          minLength: 1
+        mood:
+          type: string
+
+    Appointment:
+      type: object
+      required: [id, title, date, type]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        date:
+          type: string
+        type:
+          type: string
+        notes:
+          type: ["string", "null"]
+
+    AppointmentInput:
+      type: object
+      required: [title, date, type]
+      properties:
+        title:
+          type: string
+          minLength: 1
+        date:
+          type: string
+        type:
+          type: string
+        notes:
+          type: string
+
+    Overview:
+      type: object
+      required: [totalRequirements, completedRequirements, upcomingAppointments, journalCount, latestWeight]
+      properties:
+        totalRequirements:
+          type: integer
+        completedRequirements:
+          type: integer
+        upcomingAppointments:
+          type: integer
+        journalCount:
+          type: integer
+        latestWeight:
+          type: ["number", "null"]
+        startWeight:
+          type: ["number", "null"]
+
+    WeightEntry:
+      type: object
+      required: [id, weightKg, recordedAt]
+      properties:
+        id:
+          type: integer
+        weightKg:
+          type: number
+        recordedAt:
+          type: string
+
+    WeightInput:
+      type: object
+      required: [weightKg]
+      properties:
+        weightKg:
+          type: number
+
+    AssessmentInput:
+      type: object
+      required: [ageYears, heightCm, weightKg, hasReflux, hasDiabetes, hasHypertension, hasSleepApnea, hasJointPain, hasHeartDisease, previousAbdominalSurgery, previousWeightLossDuration, motivationText]
+      properties:
+        ageYears:
+          type: integer
+          minimum: 18
+          maximum: 70
+        heightCm:
+          type: integer
+          minimum: 100
+          maximum: 250
+        weightKg:
+          type: number
+          minimum: 50
+          maximum: 500
+        hasReflux:
+          type: boolean
+        hasDiabetes:
+          type: boolean
+        hasHypertension:
+          type: boolean
+        hasSleepApnea:
+          type: boolean
+        hasJointPain:
+          type: boolean
+        hasHeartDisease:
+          type: boolean
+        previousAbdominalSurgery:
+          type: boolean
+        previousWeightLossDuration:
+          type: string
+        motivationText:
+          type: string
+
+    AssessmentResult:
+      type: object
+      required: [id, bmi, eligible, recommendation, reasoning, createdAt]
+      properties:
+        id:
+          type: integer
+        bmi:
+          type: number
+        eligible:
+          type: boolean
+        recommendation:
+          type: string
+        reasoning:
+          type: string
+        strengthsSchlauchmagen:
+          type: ["string", "null"]
+        strengthsBypass:
+          type: ["string", "null"]
+        ageYears:
+          type: ["integer", "null"]
+        heightCm:
+          type: ["integer", "null"]
+        weightKg:
+          type: ["number", "null"]
+        hasReflux:
+          type: ["boolean", "null"]
+        hasDiabetes:
+          type: ["boolean", "null"]
+        hasHypertension:
+          type: ["boolean", "null"]
+        hasSleepApnea:
+          type: ["boolean", "null"]
+        hasJointPain:
+          type: ["boolean", "null"]
+        hasHeartDisease:
+          type: ["boolean", "null"]
+        previousAbdominalSurgery:
+          type: ["boolean", "null"]
+        createdAt:
+          type: string
+
+    OpenaiConversation:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - createdAt
+
+    OpenaiMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        conversationId:
+          type: integer
+        role:
+          type: string
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - conversationId
+        - role
+        - content
+        - createdAt
+
+    OpenaiConversationInput:
+      type: object
+      properties:
+        title:
+          type: string
+      required:
+        - title
+
+    OpenaiMessageInput:
+      type: object
+      properties:
+        content:
+          type: string
+      required:
+        - content
+
+    OpenaiConversationWithMessages:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/OpenaiMessage"
+      required:
+        - id
+        - title
+        - createdAt
+        - messages
+
+    UserProfile:
+      type: object
+      required: [surgeryDate]
+      properties:
+        surgeryDate:
+          type: ["string", "null"]
+
+    UserProfileInput:
+      type: object
+      properties:
+        surgeryDate:
+          type: ["string", "null"]
+
+    OpenaiError:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
