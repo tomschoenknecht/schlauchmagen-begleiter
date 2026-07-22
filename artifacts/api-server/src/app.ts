@@ -36,7 +36,7 @@ app.use("/api", router);
 // __dirname wird vom esbuild-Banner auf das dist/-Verzeichnis gesetzt
 const frontendDist = path.join(__dirname, "../../schlauchmagen/dist");
 app.use(express.static(frontendDist));
-app.get(/(.*)/, (_req, res) => {
+app.use((_req, res) => {
   res.sendFile(path.join(frontendDist, "index.html"));
 });
 
