@@ -120,17 +120,18 @@ export default function PasswordPage() {
               },
               {
                 bg: "/begleitung.jpg",
+                pos: "object-top",
                 color: "bg-rose-100 text-rose-600",
                 title: "Begleitung auf dem Weg",
                 desc: "Von der ersten Überlegung bis nach der Operation. Mit Tagebuch, Gewichtstracker, Terminen und einem persönlichen KI-Assistenten bist du nie allein.",
               },
-            ].map(({ icon: Icon, color, title, desc, bg }) => (
+            ].map(({ icon: Icon, color, title, desc, bg, pos }) => (
               <div
                 key={title}
                 className="rounded-2xl border bg-card shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col"
               >
                 {bg ? (
-                  <img src={bg} alt="" className="w-full h-52 object-cover object-center" />
+                  <img src={bg} alt="" className={`w-full h-52 object-cover ${pos ?? "object-center"}`} />
                 ) : (
                   Icon && (
                     <div className="px-6 pt-6">
