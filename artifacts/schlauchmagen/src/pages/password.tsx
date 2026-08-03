@@ -7,9 +7,6 @@ import { getToken } from "@/hooks/useAuth";
 import {
   HeartHandshake,
   Star,
-  Sparkles,
-  ShieldCheck,
-  MessageCircleHeart,
   MailCheck,
 } from "lucide-react";
 
@@ -203,16 +200,14 @@ export default function PasswordPage() {
           </div>
           <div className="space-y-4">
             {[
-              { icon: ShieldCheck, text: "Verständliche Informationen — kein Mediziner-Deutsch, kein Fachchinesisch." },
-              { icon: HeartHandshake, text: "Wertschätzend und respektvoll — du wirst hier niemals verurteilt." },
-              { icon: MessageCircleHeart, text: "Motivierend und ehrlich — wir zeigen dir den echten Weg, Schritt für Schritt." },
-              { icon: Sparkles, text: "Persönlich — ein KI-Assistent beantwortet deine Fragen jederzeit." },
-            ].map(({ icon: Icon, text }) => (
-              <div key={text} className="flex items-start gap-4 rounded-xl border bg-card p-5 shadow-sm">
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Icon className="w-5 h-5 text-primary" />
-                </div>
-                <p className="text-foreground leading-relaxed pt-1">{text}</p>
+              { img: "/versprechen-buch.jpg", pos: "object-[50%_60%]", text: "Verständliche Informationen — kein Mediziner-Deutsch, kein Fachchinesisch." },
+              { img: "/versprechen-haende.jpg", text: "Wertschätzend und respektvoll — du wirst hier niemals verurteilt." },
+              { img: "/versprechen-weg.jpg", text: "Motivierend und ehrlich — wir zeigen dir den echten Weg, Schritt für Schritt." },
+              { img: "/versprechen-phone.jpg", text: "Persönlich — ein KI-Assistent beantwortet deine Fragen jederzeit." },
+            ].map(({ img, pos, text }) => (
+              <div key={text} className="flex items-center gap-4 rounded-xl border bg-card p-5 shadow-sm">
+                <img src={img} alt="" className={`flex-shrink-0 w-14 h-14 rounded-full object-cover ${pos ?? "object-center"}`} />
+                <p className="text-foreground leading-relaxed">{text}</p>
               </div>
             ))}
           </div>
