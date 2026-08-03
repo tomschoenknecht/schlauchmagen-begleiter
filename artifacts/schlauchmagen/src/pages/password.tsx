@@ -115,6 +115,7 @@ export default function PasswordPage() {
               },
               {
                 bg: "/voraussetzungen.jpg",
+                pos: "object-[50%_18%]",
                 color: "bg-violet-100 text-violet-600",
                 title: "Was sind die Voraussetzungen?",
                 desc: "Nicht jeder kommt sofort für eine OP in Frage. Wir zeigen dir klar und ehrlich, welche medizinischen und persönlichen Kriterien erfüllt sein müssen.",
