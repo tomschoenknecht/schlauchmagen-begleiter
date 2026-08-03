@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { getToken } from "@/hooks/useAuth";
 import {
-  Scale,
   ClipboardList,
   HeartHandshake,
   Star,
@@ -109,7 +108,7 @@ export default function PasswordPage() {
           <div className="grid sm:grid-cols-3 gap-6">
             {[
               {
-                icon: Scale,
+                bg: "/welche-op.jpg",
                 color: "bg-primary/10 text-primary",
                 title: "Welche OP ist die richtige?",
                 desc: "Schlauchmagen, Magenbypass oder etwas anderes? Wir erklären dir verständlich die Unterschiede und helfen dir, die für dich passende Option zu finden.",
@@ -126,13 +125,28 @@ export default function PasswordPage() {
                 title: "Begleitung auf dem Weg",
                 desc: "Von der ersten Überlegung bis nach der Operation. Mit Tagebuch, Gewichtstracker, Terminen und einem persönlichen KI-Assistenten bist du nie allein.",
               },
-            ].map(({ icon: Icon, color, title, desc }) => (
-              <div key={title} className="rounded-2xl border bg-card p-6 shadow-sm hover:shadow-md transition-shadow">
-                <div className={`inline-flex p-3 rounded-xl mb-5 ${color}`}>
-                  <Icon className="w-6 h-6" />
+            ].map(({ icon: Icon, color, title, desc, bg }) => (
+              <div
+                key={title}
+                className={`relative rounded-2xl border shadow-sm hover:shadow-md transition-shadow overflow-hidden ${
+                  bg ? "min-h-[280px] flex flex-col justify-end" : "bg-card p-6"
+                }`}
+              >
+                {bg && (
+                  <>
+                    <img src={bg} alt="" className="absolute inset-0 w-full h-full object-cover object-top" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent" />
+                  </>
+                )}
+                {!bg && Icon && (
+                  <div className={`inline-flex p-3 rounded-xl mb-5 ${color}`}>
+                    <Icon className="w-6 h-6" />
+                  </div>
+                )}
+                <div className={bg ? "relative p-6" : ""}>
+                  <h3 className={`font-bold text-lg mb-2 ${bg ? "text-white" : "text-foreground"}`}>{title}</h3>
+                  <p className={`text-sm leading-relaxed ${bg ? "text-white/90" : "text-muted-foreground"}`}>{desc}</p>
                 </div>
-                <h3 className="font-bold text-lg mb-2 text-foreground">{title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
