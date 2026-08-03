@@ -19,7 +19,7 @@
     "drizzle-orm": "catalog:",
     "express": "^5",
     "jsonwebtoken": "^9.0.3",
-    "resend": "^4",
+    "resend": "^6",
     "pino": "^9",
     "pino-http": "^10"
   },

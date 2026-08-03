@@ -40,7 +40,7 @@ router.post("/auth/magic-link", async (req, res) => {
   const resend = new Resend(resendKey);
   const from = process.env.EMAIL_FROM ?? "onboarding@resend.dev";
 
-  await resend.emails.send({
+  const { error } = await resend.emails.send({
     from: `Schlauchmagen Begleiter <${from}>`,
     to: normalizedEmail,
     subject: "Dein Zugangslink",
@@ -59,6 +59,12 @@ router.post("/auth/magic-link", async (req, res) => {
       </div>
     `,
   });
+
+  if (error) {
+    console.error("Magic-Link-Versand fehlgeschlagen:", error);
+    res.status(502).json({ error: "E-Mail konnte nicht versendet werden" });
+    return;
+  }
 
   res.json({ ok: true });
 });
