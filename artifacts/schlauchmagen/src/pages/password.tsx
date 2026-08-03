@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { getToken } from "@/hooks/useAuth";
 import {
-  ClipboardList,
   HeartHandshake,
   Star,
   Sparkles,
@@ -114,7 +113,7 @@ export default function PasswordPage() {
                 desc: "Schlauchmagen, Magenbypass oder etwas anderes? Wir erklären dir verständlich die Unterschiede und helfen dir, die für dich passende Option zu finden.",
               },
               {
-                icon: ClipboardList,
+                bg: "/voraussetzungen.jpg",
                 color: "bg-violet-100 text-violet-600",
                 title: "Was sind die Voraussetzungen?",
                 desc: "Nicht jeder kommt sofort für eine OP in Frage. Wir zeigen dir klar und ehrlich, welche medizinischen und persönlichen Kriterien erfüllt sein müssen.",
