@@ -119,7 +119,7 @@ export default function PasswordPage() {
                 desc: "Nicht jeder kommt sofort für eine OP in Frage. Wir zeigen dir klar und ehrlich, welche medizinischen und persönlichen Kriterien erfüllt sein müssen.",
               },
               {
-                icon: HeartHandshake,
+                bg: "/begleitung.jpg",
                 color: "bg-rose-100 text-rose-600",
                 title: "Begleitung auf dem Weg",
                 desc: "Von der ersten Überlegung bis nach der Operation. Mit Tagebuch, Gewichtstracker, Terminen und einem persönlichen KI-Assistenten bist du nie allein.",
