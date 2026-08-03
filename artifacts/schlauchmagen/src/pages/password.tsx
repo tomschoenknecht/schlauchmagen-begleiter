@@ -120,7 +120,7 @@ export default function PasswordPage() {
               },
               {
                 bg: "/begleitung.jpg",
-                pos: "object-top",
+                pos: "object-[50%_25%]",
                 color: "bg-rose-100 text-rose-600",
                 title: "Begleitung auf dem Weg",
                 desc: "Von der ersten Überlegung bis nach der Operation. Mit Tagebuch, Gewichtstracker, Terminen und einem persönlichen KI-Assistenten bist du nie allein.",
