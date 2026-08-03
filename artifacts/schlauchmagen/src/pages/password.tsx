@@ -127,24 +127,22 @@ export default function PasswordPage() {
             ].map(({ icon: Icon, color, title, desc, bg }) => (
               <div
                 key={title}
-                className={`relative rounded-2xl border shadow-sm hover:shadow-md transition-shadow overflow-hidden ${
-                  bg ? "min-h-[280px] flex flex-col justify-end" : "bg-card p-6"
-                }`}
+                className="rounded-2xl border bg-card shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col"
               >
-                {bg && (
-                  <>
-                    <img src={bg} alt="" className="absolute inset-0 w-full h-full object-cover object-top" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent" />
-                  </>
+                {bg ? (
+                  <img src={bg} alt="" className="w-full h-52 object-cover object-center" />
+                ) : (
+                  Icon && (
+                    <div className="px-6 pt-6">
+                      <div className={`inline-flex p-3 rounded-xl ${color}`}>
+                        <Icon className="w-6 h-6" />
+                      </div>
+                    </div>
+                  )
                 )}
-                {!bg && Icon && (
-                  <div className={`inline-flex p-3 rounded-xl mb-5 ${color}`}>
-                    <Icon className="w-6 h-6" />
-                  </div>
-                )}
-                <div className={bg ? "relative p-6" : ""}>
-                  <h3 className={`font-bold text-lg mb-2 ${bg ? "text-white" : "text-foreground"}`}>{title}</h3>
-                  <p className={`text-sm leading-relaxed ${bg ? "text-white/90" : "text-muted-foreground"}`}>{desc}</p>
+                <div className="p-6">
+                  <h3 className="font-bold text-lg mb-2 text-foreground">{title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{desc}</p>
                 </div>
               </div>
             ))}
