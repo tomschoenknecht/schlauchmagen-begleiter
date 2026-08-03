@@ -108,6 +108,7 @@ export default function PasswordPage() {
             {[
               {
                 bg: "/welche-op.jpg",
+                filter: "brightness-110 saturate-150 contrast-105",
                 color: "bg-primary/10 text-primary",
                 title: "Welche OP ist die richtige?",
                 desc: "Schlauchmagen, Magenbypass oder etwas anderes? Wir erklären dir verständlich die Unterschiede und helfen dir, die für dich passende Option zu finden.",
@@ -125,13 +126,13 @@ export default function PasswordPage() {
                 title: "Begleitung auf dem Weg",
                 desc: "Von der ersten Überlegung bis nach der Operation. Mit Tagebuch, Gewichtstracker, Terminen und einem persönlichen KI-Assistenten bist du nie allein.",
               },
-            ].map(({ icon: Icon, color, title, desc, bg, pos }) => (
+            ].map(({ icon: Icon, color, title, desc, bg, pos, filter }) => (
               <div
                 key={title}
                 className="rounded-2xl border bg-card shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col"
               >
                 {bg ? (
-                  <img src={bg} alt="" className={`w-full h-52 object-cover ${pos ?? "object-center"}`} />
+                  <img src={bg} alt="" className={`w-full h-52 object-cover ${pos ?? "object-center"} ${filter ?? ""}`} />
                 ) : (
                   Icon && (
                     <div className="px-6 pt-6">
