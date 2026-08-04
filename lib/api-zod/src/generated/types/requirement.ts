@@ -15,4 +15,6 @@ export interface Requirement {
   /** @nullable */
   completedAt?: string | null;
   order: number;
+  /** @nullable */
+  link?: string | null;
 }

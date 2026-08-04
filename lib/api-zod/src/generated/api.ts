@@ -26,7 +26,8 @@ export const ListRequirementsResponseItem = zod.object({
   "category": zod.string(),
   "completed": zod.boolean(),
   "completedAt": zod.string().nullish(),
-  "order": zod.number()
+  "order": zod.number(),
+  "link": zod.string().nullish()
 })
 export const ListRequirementsResponse = zod.array(ListRequirementsResponseItem)
 
@@ -49,7 +50,8 @@ export const ToggleRequirementResponse = zod.object({
   "category": zod.string(),
   "completed": zod.boolean(),
   "completedAt": zod.string().nullish(),
-  "order": zod.number()
+  "order": zod.number(),
+  "link": zod.string().nullish()
 })
 
 
