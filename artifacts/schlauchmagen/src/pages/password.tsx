@@ -6,7 +6,6 @@ import { useToast } from "@/hooks/use-toast";
 import { getToken } from "@/hooks/useAuth";
 import {
   HeartHandshake,
-  Star,
   MailCheck,
 } from "lucide-react";
 
@@ -70,20 +69,12 @@ export default function PasswordPage() {
         </div>
       </section>
 
-      {/* CELEBRATION BANNER */}
-      <section className="bg-amber-50 border-y border-amber-200 py-10 px-6">
+      {/* EINORDNUNG */}
+      <section className="bg-stone-50 border-y border-stone-200 py-10 px-6">
         <div className="max-w-3xl mx-auto text-center">
-          <div className="flex justify-center mb-4">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-6 h-6 text-amber-400 fill-amber-400" />
-            ))}
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-amber-900 mb-3">
-            Herzlichen Glückwunsch!
-          </h2>
-          <p className="text-amber-800 text-lg leading-relaxed max-w-xl mx-auto">
-            Du bist hier, weil du dein Leben verändern möchtest. Das erfordert Mut und Entschlossenheit —
-            und genau das hast du bewiesen. Du bist nicht allein.
+          <p className="text-stone-700 text-lg leading-relaxed max-w-xl mx-auto">
+            Eine bariatrische OP ist kein leichter Weg. Aber du musst ihn nicht allein gehen —
+            und du musst ihn nicht unvorbereitet gehen.
           </p>
         </div>
       </section>
@@ -157,21 +148,21 @@ export default function PasswordPage() {
               </h2>
               <p className="text-muted-foreground text-lg leading-relaxed mb-6">
                 Adipositas betrifft Millionen Menschen. Es ist keine Frage der Willenskraft —
-                es ist eine komplexe Erkrankung. Und du verdienst Unterstützung, Verständnis
-                und einen klaren Weg nach vorne.
+                es ist eine komplexe Erkrankung. Die Entscheidung für oder gegen eine OP
+                ist eine der schwierigsten, die man treffen kann.
               </p>
               <p className="text-muted-foreground text-lg leading-relaxed">
-                Tausende Menschen haben diesen Schritt bereits gewagt — und ihr Leben
-                grundlegend verändert. Du kannst das auch.
+                Diese App macht dir keine Versprechen. Sie gibt dir Informationen,
+                Orientierung und einen Ort, wo du deinen eigenen Weg dokumentieren kannst.
               </p>
             </div>
           </div>
 
           <div className="grid sm:grid-cols-3 gap-6 text-center">
             {[
-              { value: "26%", label: "der Deutschen leben mit Adipositas" },
-              { value: "2×", label: "höheres Risiko für Herzerkrankungen" },
-              { value: "85%", label: "Gewichtsverlust dauerhaft nach OP" },
+              { value: "26.000", label: "bariatrische OPs pro Jahr in Deutschland" },
+              { value: "6–12", label: "Monate dauert der Weg bis zur OP im Schnitt" },
+              { value: "2 Phasen", label: "Vor und nach der OP – beide brauchen Vorbereitung" },
             ].map(({ value, label }) => (
               <div key={label} className="rounded-2xl bg-card border p-8 shadow-sm">
                 <div className="text-4xl font-bold text-primary mb-2">{value}</div>
