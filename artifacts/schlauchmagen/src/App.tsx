@@ -4,6 +4,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
+import SchlauchmagenOderBypass from "@/pages/info/schlauchmagen-oder-bypass";
+import KlinikterminFragen from "@/pages/info/kliniktermin-fragen";
+import WasDanachPassiert from "@/pages/info/was-danach-passiert";
+import BinIchGeeignet from "@/pages/info/bin-ich-geeignet";
+import RisikenBetroffene from "@/pages/info/risiken-betroffene";
+import WegZurOp from "@/pages/info/weg-zur-op";
 import { SidebarLayout } from "@/components/layout/sidebar-layout";
 import PasswordPage from "@/pages/password";
 import AuthCallbackPage from "@/pages/auth-callback";
@@ -83,6 +89,12 @@ function Router() {
       <Route path="/gewicht">
         <ProtectedRoute><SidebarLayout><WeightPage /></SidebarLayout></ProtectedRoute>
       </Route>
+      <Route path="/info/schlauchmagen-oder-bypass" component={SchlauchmagenOderBypass} />
+      <Route path="/info/kliniktermin-fragen" component={KlinikterminFragen} />
+      <Route path="/info/was-danach-passiert" component={WasDanachPassiert} />
+      <Route path="/info/bin-ich-geeignet" component={BinIchGeeignet} />
+      <Route path="/info/risiken-betroffene" component={RisikenBetroffene} />
+      <Route path="/info/weg-zur-op" component={WegZurOp} />
       <Route component={NotFound} />
     </Switch>
   );
