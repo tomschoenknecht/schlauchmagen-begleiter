@@ -5,6 +5,7 @@ import { eq, and, gt, isNull } from "drizzle-orm";
 import { Resend } from "resend";
 import { randomBytes } from "node:crypto";
 import jwt from "jsonwebtoken";
+import { requireAuth } from "../middleware/auth";
 
 const router = Router();
 
@@ -41,7 +42,7 @@ router.post("/auth/magic-link", async (req, res) => {
   const from = process.env.EMAIL_FROM ?? "onboarding@resend.dev";
 
   const { error } = await resend.emails.send({
-    from: `Schlauchmagen Begleiter <${from}>`,
+    from: `Bari-Guide <${from}>`,
     to: normalizedEmail,
     subject: "Dein Zugangslink",
     html: `
@@ -111,6 +112,16 @@ router.get("/auth/verify", async (req, res) => {
 
   const jwtToken = jwt.sign({ sub: user.id }, secret, { expiresIn: "30d" });
   res.json({ token: jwtToken });
+});
+
+router.get("/auth/refresh", requireAuth, (req, res) => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    res.status(500).json({ error: "Server-Konfiguration unvollständig" });
+    return;
+  }
+  const token = jwt.sign({ sub: req.userId }, secret, { expiresIn: "30d" });
+  res.json({ token });
 });
 
 export const authRouter = router;

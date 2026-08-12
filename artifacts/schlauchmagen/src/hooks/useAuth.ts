@@ -23,6 +23,20 @@ export function useAuth() {
   useEffect(() => {
     const handler = () => setTokenState(getToken());
     window.addEventListener("slm_auth_change", handler);
+
+    // Gleitende Session: gültigen Token bei jedem App-Start auf frische 30 Tage verlängern.
+    const existing = getToken();
+    if (existing) {
+      fetch("/api/auth/refresh", { headers: { Authorization: `Bearer ${existing}` } })
+        .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+        .then((d: { token?: string }) => {
+          if (d.token) saveToken(d.token);
+        })
+        .catch((status) => {
+          if (status === 401) clearToken();
+        });
+    }
+
     return () => window.removeEventListener("slm_auth_change", handler);
   }, []);
 
