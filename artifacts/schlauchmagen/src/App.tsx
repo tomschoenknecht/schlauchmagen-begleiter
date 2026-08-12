@@ -26,6 +26,7 @@ import BeratungBypassPage from "@/pages/beratung-bypass";
 import BeratungRisikenPage from "@/pages/beratung-risiken";
 import BeratungSubstitutionPage from "@/pages/beratung-substitution";
 import ChatbotPage from "@/pages/chatbot";
+import { FEATURES, ComingSoon, PreviewLock } from "@/components/feature-gate";
 import { useAuth } from "@/hooks/useAuth";
 
 const queryClient = new QueryClient();
@@ -61,7 +62,7 @@ function Router() {
         </ProtectedRoute>
       </Route>
       <Route path="/chatbot">
-        <ProtectedRoute><SidebarLayout><ChatbotPage /></SidebarLayout></ProtectedRoute>
+        <ProtectedRoute><SidebarLayout>{FEATURES.chatbot ? <ChatbotPage /> : <ComingSoon title="KI-Begleiter" />}</SidebarLayout></ProtectedRoute>
       </Route>
       <Route path="/eingangstest">
         <ProtectedRoute><SidebarLayout><EingangstestPage /></SidebarLayout></ProtectedRoute>
@@ -85,13 +86,13 @@ function Router() {
         <ProtectedRoute><SidebarLayout><RequirementsPage /></SidebarLayout></ProtectedRoute>
       </Route>
       <Route path="/termine">
-        <ProtectedRoute><SidebarLayout><AppointmentsPage /></SidebarLayout></ProtectedRoute>
+        <ProtectedRoute><SidebarLayout><PreviewLock locked={!FEATURES.appointments} feature="Termine"><AppointmentsPage /></PreviewLock></SidebarLayout></ProtectedRoute>
       </Route>
       <Route path="/tagebuch">
-        <ProtectedRoute><SidebarLayout><JournalPage /></SidebarLayout></ProtectedRoute>
+        <ProtectedRoute><SidebarLayout><PreviewLock locked={!FEATURES.journal} feature="Tagebuch"><JournalPage /></PreviewLock></SidebarLayout></ProtectedRoute>
       </Route>
       <Route path="/gewicht">
-        <ProtectedRoute><SidebarLayout><WeightPage /></SidebarLayout></ProtectedRoute>
+        <ProtectedRoute><SidebarLayout><PreviewLock locked={!FEATURES.weight} feature="Gewichtsprotokoll"><WeightPage /></PreviewLock></SidebarLayout></ProtectedRoute>
       </Route>
       <Route path="/info/schlauchmagen-oder-bypass" component={SchlauchmagenOderBypass} />
       <Route path="/info/kliniktermin-fragen" component={KlinikterminFragen} />
