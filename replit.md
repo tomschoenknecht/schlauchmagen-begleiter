@@ -1,45 +1,63 @@
-# [Project name]
+# Schlauchmagen-Begleiter (bari-guide.de)
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Begleit-App für Menschen vor und nach einer bariatrischen OP. Ehrlich, ohne Versprechen, ohne Schönreden.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- `pnpm --filter @workspace/api-server run dev` — API-Server starten (Port 5000)
+- `pnpm --filter @workspace/schlauchmagen run dev` — Frontend starten (Port 3000)
+- `pnpm run typecheck` — Typecheck über alle Pakete
+- `pnpm run build` — Typecheck + Build aller Pakete
+- `pnpm --filter @workspace/db run push` — DB-Schema pushen (nur Dev)
+- Pflicht-Env: `DATABASE_URL` — Neon PostgreSQL Connection String
 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- API: Express 5 (Port 5000), serviert React-SPA als statische Dateien aus `dist/public`
+- DB: Neon PostgreSQL + Drizzle ORM
+- Auth: JWT (30 Tage) + Magic Link via Resend
+- Validation: Zod (zod/v4), drizzle-zod
+- Frontend: React + Vite + Wouter (Routing) + Tailwind + shadcn/ui
+- API-Codegen: Orval (aus OpenAPI-Spec)
+- Build: esbuild (CJS Bundle für Server)
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- DB-Schema: `lib/db/src/schema/`
+- API-Spec (Quelle): `lib/api-spec/openapi.yaml`
+- Generierte API-Hooks: `lib/api-client-react/src/generated/api.ts`
+- Server-Routen: `artifacts/api-server/src/routes/`
+- Frontend-Seiten: `artifacts/schlauchmagen/src/pages/`
+- Öffentliche Assets: `artifacts/schlauchmagen/public/`
+- Middleware (Auth): `artifacts/api-server/src/middleware/`
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Öffentliche SEO-Seiten unter `/info/*` laufen ohne ProtectedRoute (kein Login nötig für Google-Crawler)
+- Onboarding-Flow: einmalig nach erstem Login, gespeichert als `onboarding_completed` in `user_profile`
+- Magic Link Auth: kein Passwort, Token im localStorage unter `slm_token`
+- Frontend und API laufen auf demselben Origin in Prod (Express serviert den Vite-Build)
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- **Vor der OP**: Beratung (Schlauchmagen vs. Bypass), Voraussetzungen, Checkliste, Termine
+- **Nach der OP**: Tagebuch, Gewichtstracker, KI-Chatbot
+- **Öffentlich** (ohne Login): 6 SEO-Seiten unter `/info/` für organischen Traffic
 
-## User preferences
+## Deployment
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Railway (EU West), automatisch bei Push auf `main`
+- Domain: bari-guide.de (INWX-Registrar, Cloudflare-DNS)
+- E-Mail: Resend (Domain verifiziert mit DKIM + SPF)
+
+## Personas
+
+- Strategie-Projekt: `C:\claude-projekt\Strategie\PERSONAS-SCHLAUCHMAGEN.md`
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
-
-## Pointers
-
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- Nach Schema-Änderungen: `pnpm --filter @workspace/db run push` ausführen
+- Nach OpenAPI-Änderungen: `pnpm --filter @workspace/api-spec run codegen` ausführen (regeneriert Hooks + Zod-Typen)
+- `mockup-sandbox` benötigt eine `PORT`-Env-Variable – schlägt beim globalen Build fehl, irrelevant für Prod
+- Generierte Dateien in `lib/api-client-react/src/generated/` und `lib/api-zod/src/generated/` nicht manuell bearbeiten (außer als temporärer Workaround)
