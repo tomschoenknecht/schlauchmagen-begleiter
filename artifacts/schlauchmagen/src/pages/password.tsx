@@ -137,8 +137,8 @@ export default function PasswordPage() {
           <div className="grid md:grid-cols-2 gap-12 items-center mb-14">
             <div className="rounded-3xl overflow-hidden shadow-2xl aspect-[4/3]">
               <img
-                src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80"
-                alt="Glückliche Menschen"
+                src="/nicht-allein.jpg"
+                alt=""
                 className="w-full h-full object-cover"
               />
             </div>
