@@ -20,18 +20,35 @@ async function getOrCreateProfile(userId: string) {
 
 router.get("/profile", async (req, res) => {
   const profile = await getOrCreateProfile(req.userId);
-  res.json({ surgeryDate: profile.surgeryDate ?? null });
+  res.json({
+    surgeryDate: profile.surgeryDate ?? null,
+    phase: profile.phase ?? null,
+    onboardingCompleted: profile.onboardingCompleted,
+  });
 });
 
 router.put("/profile", async (req, res) => {
-  const { surgeryDate } = req.body as { surgeryDate?: string | null };
+  const { surgeryDate, phase, onboardingCompleted } = req.body as {
+    surgeryDate?: string | null;
+    phase?: string | null;
+    onboardingCompleted?: boolean;
+  };
   const profile = await getOrCreateProfile(req.userId);
   const [updated] = await db
     .update(userProfileTable)
-    .set({ surgeryDate: surgeryDate ?? null, updatedAt: new Date() })
+    .set({
+      ...(surgeryDate !== undefined && { surgeryDate: surgeryDate ?? null }),
+      ...(phase !== undefined && { phase: phase ?? null }),
+      ...(onboardingCompleted !== undefined && { onboardingCompleted }),
+      updatedAt: new Date(),
+    })
     .where(eq(userProfileTable.id, profile.id))
     .returning();
-  res.json({ surgeryDate: updated.surgeryDate ?? null });
+  res.json({
+    surgeryDate: updated.surgeryDate ?? null,
+    phase: updated.phase ?? null,
+    onboardingCompleted: updated.onboardingCompleted,
+  });
 });
 
 export default router;

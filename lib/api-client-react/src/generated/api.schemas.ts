@@ -170,11 +170,17 @@ export interface OpenaiConversationWithMessages {
 export interface UserProfile {
   /** @nullable */
   surgeryDate: string | null;
+  /** @nullable */
+  phase: string | null;
+  onboardingCompleted: boolean;
 }
 
 export interface UserProfileInput {
   /** @nullable */
   surgeryDate?: string | null;
+  /** @nullable */
+  phase?: string | null;
+  onboardingCompleted?: boolean;
 }
 
 export interface OpenaiError {

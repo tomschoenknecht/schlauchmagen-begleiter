@@ -19,8 +19,16 @@ export default function AuthCallbackPage() {
       .then((data: { token?: string; error?: string }) => {
         if (data.token) {
           saveToken(data.token);
-          // Hard-Redirect damit useAuth frisch initialisiert wird
-          window.location.href = "/";
+          fetch("/api/profile", {
+            headers: { Authorization: `Bearer ${data.token}` },
+          })
+            .then((r) => r.json())
+            .then((profile: { onboardingCompleted?: boolean }) => {
+              window.location.href = profile.onboardingCompleted ? "/" : "/onboarding";
+            })
+            .catch(() => {
+              window.location.href = "/onboarding";
+            });
         } else {
           setError(data.error ?? "Link ungültig oder abgelaufen.");
         }

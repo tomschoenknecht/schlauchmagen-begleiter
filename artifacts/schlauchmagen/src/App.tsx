@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
+import OnboardingPage from "@/pages/onboarding";
 import SchlauchmagenOderBypass from "@/pages/info/schlauchmagen-oder-bypass";
 import KlinikterminFragen from "@/pages/info/kliniktermin-fragen";
 import WasDanachPassiert from "@/pages/info/was-danach-passiert";
@@ -49,6 +50,9 @@ function Router() {
     <Switch>
       <Route path="/login" component={PasswordPage} />
       <Route path="/auth/callback" component={AuthCallbackPage} />
+      <Route path="/onboarding">
+        <ProtectedRoute><OnboardingPage /></ProtectedRoute>
+      </Route>
       <Route path="/">
         <ProtectedRoute>
           <SidebarLayout>
