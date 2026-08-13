@@ -1,6 +1,17 @@
 import Stripe from "stripe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
+let _stripe: Stripe | null = null;
+
+/** Lazy-Init: Stripe-Client erst bei Bedarf erzeugen, damit der Server auch
+ *  ohne gesetzten STRIPE_SECRET_KEY startet (Konstruktor wirft bei leerem Key). */
+export function getStripe(): Stripe {
+  if (!_stripe) {
+    const key = process.env.STRIPE_SECRET_KEY;
+    if (!key) throw new Error("STRIPE_SECRET_KEY ist nicht gesetzt");
+    _stripe = new Stripe(key);
+  }
+  return _stripe;
+}
 
 export type Tier = "free" | "basis" | "deluxe";
 

@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import Stripe from "stripe";
 import { db, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
-import { stripe, tierForPrice } from "../lib/stripe";
+import { getStripe, tierForPrice } from "../lib/stripe";
 import { logger } from "../lib/logger";
 
 /**
@@ -19,7 +19,7 @@ export async function billingWebhookHandler(req: Request, res: Response): Promis
 
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(req.body as Buffer, sig, secret);
+    event = getStripe().webhooks.constructEvent(req.body as Buffer, sig, secret);
   } catch (err) {
     logger.error({ err }, "Stripe-Webhook-Signatur ungültig");
     res.status(400).send("Signatur ungültig");
@@ -54,7 +54,7 @@ async function syncSubscription(event: Stripe.Event): Promise<void> {
   } else if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
     if (session.subscription) {
-      subscription = await stripe.subscriptions.retrieve(String(session.subscription));
+      subscription = await getStripe().subscriptions.retrieve(String(session.subscription));
     }
   }
   if (!subscription) return;

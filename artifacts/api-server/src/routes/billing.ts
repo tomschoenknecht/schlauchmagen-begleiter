@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { db, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
-import { stripe, priceForTier, effectiveTier } from "../lib/stripe";
+import { getStripe, priceForTier, effectiveTier } from "../lib/stripe";
 
 const router = Router();
 
@@ -39,7 +39,7 @@ router.post("/billing/checkout", async (req, res) => {
 
   let customerId = user.stripeCustomerId;
   if (!customerId) {
-    const customer = await stripe.customers.create({
+    const customer = await getStripe().customers.create({
       email: user.email,
       metadata: { userId: user.id },
     });
@@ -50,7 +50,7 @@ router.post("/billing/checkout", async (req, res) => {
       .where(eq(usersTable.id, user.id));
   }
 
-  const session = await stripe.checkout.sessions.create({
+  const session = await getStripe().checkout.sessions.create({
     mode: "subscription",
     customer: customerId,
     line_items: [{ price, quantity: 1 }],
@@ -71,7 +71,7 @@ router.get("/billing/portal", async (req, res) => {
     res.status(400).json({ error: "Kein Abo vorhanden" });
     return;
   }
-  const portal = await stripe.billingPortal.sessions.create({
+  const portal = await getStripe().billingPortal.sessions.create({
     customer: user.stripeCustomerId,
     return_url: `${appUrl()}/konto`,
   });
