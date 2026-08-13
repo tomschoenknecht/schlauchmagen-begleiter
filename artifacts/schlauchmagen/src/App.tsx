@@ -26,7 +26,9 @@ import BeratungBypassPage from "@/pages/beratung-bypass";
 import BeratungRisikenPage from "@/pages/beratung-risiken";
 import BeratungSubstitutionPage from "@/pages/beratung-substitution";
 import ChatbotPage from "@/pages/chatbot";
-import { FEATURES, ComingSoon, PreviewLock } from "@/components/feature-gate";
+import UpgradePage from "@/pages/upgrade";
+import KontoPage from "@/pages/konto";
+import { TierGate } from "@/components/feature-gate";
 import { useAuth } from "@/hooks/useAuth";
 
 const queryClient = new QueryClient();
@@ -62,7 +64,13 @@ function Router() {
         </ProtectedRoute>
       </Route>
       <Route path="/chatbot">
-        <ProtectedRoute><SidebarLayout>{FEATURES.chatbot ? <ChatbotPage /> : <ComingSoon title="KI-Begleiter" />}</SidebarLayout></ProtectedRoute>
+        <ProtectedRoute><SidebarLayout><TierGate need="deluxe" feature="KI-Begleiter" mode="lock"><ChatbotPage /></TierGate></SidebarLayout></ProtectedRoute>
+      </Route>
+      <Route path="/upgrade">
+        <ProtectedRoute><SidebarLayout><UpgradePage /></SidebarLayout></ProtectedRoute>
+      </Route>
+      <Route path="/konto">
+        <ProtectedRoute><SidebarLayout><KontoPage /></SidebarLayout></ProtectedRoute>
       </Route>
       <Route path="/eingangstest">
         <ProtectedRoute><SidebarLayout><EingangstestPage /></SidebarLayout></ProtectedRoute>
@@ -86,13 +94,13 @@ function Router() {
         <ProtectedRoute><SidebarLayout><RequirementsPage /></SidebarLayout></ProtectedRoute>
       </Route>
       <Route path="/termine">
-        <ProtectedRoute><SidebarLayout><PreviewLock locked={!FEATURES.appointments} feature="Termine"><AppointmentsPage /></PreviewLock></SidebarLayout></ProtectedRoute>
+        <ProtectedRoute><SidebarLayout><TierGate need="basis" feature="Termine" mode="preview"><AppointmentsPage /></TierGate></SidebarLayout></ProtectedRoute>
       </Route>
       <Route path="/tagebuch">
-        <ProtectedRoute><SidebarLayout><PreviewLock locked={!FEATURES.journal} feature="Tagebuch"><JournalPage /></PreviewLock></SidebarLayout></ProtectedRoute>
+        <ProtectedRoute><SidebarLayout><TierGate need="basis" feature="Tagebuch" mode="preview"><JournalPage /></TierGate></SidebarLayout></ProtectedRoute>
       </Route>
       <Route path="/gewicht">
-        <ProtectedRoute><SidebarLayout><PreviewLock locked={!FEATURES.weight} feature="Gewichtsprotokoll"><WeightPage /></PreviewLock></SidebarLayout></ProtectedRoute>
+        <ProtectedRoute><SidebarLayout><TierGate need="basis" feature="Gewichtsprotokoll" mode="preview"><WeightPage /></TierGate></SidebarLayout></ProtectedRoute>
       </Route>
       <Route path="/info/schlauchmagen-oder-bypass" component={SchlauchmagenOderBypass} />
       <Route path="/info/kliniktermin-fragen" component={KlinikterminFragen} />

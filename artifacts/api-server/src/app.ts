@@ -3,6 +3,7 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import path from "node:path";
 import router from "./routes";
+import { billingWebhookHandler } from "./routes/billing-webhook";
 import { logger } from "./lib/logger";
 
 const app: Express = express();
@@ -27,6 +28,14 @@ app.use(
   }),
 );
 app.use(cors());
+
+// Stripe-Webhook braucht den Raw-Body und muss VOR express.json() stehen.
+app.post(
+  "/api/billing/webhook",
+  express.raw({ type: "application/json" }),
+  billingWebhookHandler,
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

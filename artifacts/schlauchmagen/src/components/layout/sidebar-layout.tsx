@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { LayoutDashboard, CheckSquare, Calendar, BookHeart, Activity, LogOut, Menu, ClipboardList, Stethoscope, MessageCircleHeart } from "lucide-react";
+import { LayoutDashboard, CheckSquare, Calendar, BookHeart, Activity, LogOut, Menu, ClipboardList, Stethoscope, MessageCircleHeart, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { clearToken } from "@/hooks/useAuth";
@@ -23,6 +23,7 @@ export function SidebarLayout({ children }: { children: React.ReactNode }) {
     { href: "/termine", label: "Termine", icon: Calendar },
     { href: "/tagebuch", label: "Tagebuch", icon: BookHeart },
     { href: "/gewicht", label: "Gewichtsprotokoll", icon: Activity },
+    { href: "/konto", label: "Konto", icon: CreditCard },
   ];
 
   const SidebarContent = () => (
