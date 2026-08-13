@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { db, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
-import { getStripe, priceForTier, effectiveTier } from "../lib/stripe";
+import { getStripe, priceForTier, tierForPrice, effectiveTier } from "../lib/stripe";
 
 const router = Router();
 
@@ -76,6 +76,51 @@ router.get("/billing/portal", async (req, res) => {
     return_url: `${appUrl()}/konto`,
   });
   res.json({ url: portal.url });
+});
+
+/** Holt den aktuellen Abo-Status direkt von Stripe und aktualisiert den Nutzer.
+ *  Wird nach der Rückkehr aus dem Checkout aufgerufen (ersetzt den Webhook fürs Freischalten). */
+router.post("/billing/sync", async (req, res) => {
+  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, req.userId));
+  if (!user?.stripeCustomerId) {
+    res.json({ tier: "free" });
+    return;
+  }
+
+  const subs = await getStripe().subscriptions.list({
+    customer: user.stripeCustomerId,
+    status: "all",
+    limit: 10,
+  });
+  const sub =
+    subs.data.find((s) => s.status === "active" || s.status === "trialing") ?? subs.data[0];
+
+  if (!sub) {
+    await db
+      .update(usersTable)
+      .set({ tier: "free", subscriptionStatus: null })
+      .where(eq(usersTable.id, user.id));
+    res.json({ tier: "free" });
+    return;
+  }
+
+  const priceId = sub.items.data[0]?.price?.id ?? null;
+  const boughtTier = tierForPrice(priceId) ?? "free";
+  const status = sub.status;
+  const active = status === "active" || status === "trialing";
+  const periodEndUnix = (sub as unknown as { current_period_end?: number }).current_period_end;
+
+  await db
+    .update(usersTable)
+    .set({
+      stripeSubscriptionId: sub.id,
+      subscriptionStatus: status,
+      tier: active ? boughtTier : "free",
+      currentPeriodEnd: periodEndUnix ? new Date(periodEndUnix * 1000) : null,
+    })
+    .where(eq(usersTable.id, user.id));
+
+  res.json({ tier: active ? boughtTier : "free", subscriptionStatus: status });
 });
 
 export default router;

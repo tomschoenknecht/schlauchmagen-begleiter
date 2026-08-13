@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useMe, openBillingPortal } from "@/hooks/useTier";
+import { useMe, openBillingPortal, syncBilling } from "@/hooks/useTier";
 
 const TIER_LABEL: Record<string, string> = {
   free: "Kostenlos",
@@ -14,9 +14,19 @@ export default function KontoPage() {
 
   useEffect(() => {
     if (window.location.search.includes("checkout=success")) {
-      // Nach der Zahlung Status neu laden (der Stripe-Webhook kann kurz brauchen).
-      const t = setTimeout(() => qc.invalidateQueries({ queryKey: ["me"] }), 1500);
-      return () => clearTimeout(t);
+      // Nach der Zahlung den Status direkt von Stripe holen und neu laden.
+      let cancelled = false;
+      (async () => {
+        try {
+          await syncBilling();
+        } catch {
+          /* ignore */
+        }
+        if (!cancelled) qc.invalidateQueries({ queryKey: ["me"] });
+      })();
+      return () => {
+        cancelled = true;
+      };
     }
     return undefined;
   }, [qc]);

@@ -42,6 +42,11 @@ export async function startCheckout(tier: "basis" | "deluxe"): Promise<void> {
   else throw new Error(data.error ?? "Checkout fehlgeschlagen");
 }
 
+/** Holt den Abo-Status nach der Zahlung direkt von Stripe (ohne Webhook). */
+export async function syncBilling(): Promise<void> {
+  await fetch("/api/billing/sync", { method: "POST", headers: authHeaders() });
+}
+
 /** Öffnet das Stripe-Kundenportal. */
 export async function openBillingPortal(): Promise<void> {
   const res = await fetch("/api/billing/portal", { headers: authHeaders() });
