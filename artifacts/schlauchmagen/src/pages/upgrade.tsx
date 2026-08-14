@@ -37,9 +37,9 @@ export default function UpgradePage() {
     setLoading(tier);
     try {
       await startCheckout(tier);
-    } catch {
+    } catch (e) {
       setLoading(null);
-      alert("Checkout konnte nicht gestartet werden. Bitte später erneut versuchen.");
+      alert("Checkout-Fehler: " + (e instanceof Error ? e.message : "unbekannt"));
     }
   }
 

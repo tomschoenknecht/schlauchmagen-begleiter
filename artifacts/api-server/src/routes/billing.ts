@@ -37,6 +37,7 @@ router.post("/billing/checkout", async (req, res) => {
     return;
   }
 
+  try {
   let customerId = user.stripeCustomerId;
   if (!customerId) {
     const customer = await getStripe().customers.create({
@@ -61,7 +62,10 @@ router.post("/billing/checkout", async (req, res) => {
     subscription_data: { metadata: { userId: user.id, tier } },
   });
 
-  res.json({ url: session.url });
+    res.json({ url: session.url });
+  } catch (err) {
+    res.status(500).json({ error: (err as Error).message });
+  }
 });
 
 /** Öffnet das Stripe-Kundenportal (Kündigung/Upgrade/Zahlungsmittel). */
