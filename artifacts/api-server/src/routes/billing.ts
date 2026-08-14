@@ -2,6 +2,7 @@ import { Router } from "express";
 import { db, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { getStripe, priceForTier, tierForPrice, effectiveTier } from "../lib/stripe";
+import { logger } from "../lib/logger";
 
 const router = Router();
 
@@ -64,7 +65,8 @@ router.post("/billing/checkout", async (req, res) => {
 
     res.json({ url: session.url });
   } catch (err) {
-    res.status(500).json({ error: (err as Error).message });
+    logger.error({ err }, "Checkout fehlgeschlagen");
+    res.status(500).json({ error: "Checkout konnte nicht gestartet werden" });
   }
 });
 

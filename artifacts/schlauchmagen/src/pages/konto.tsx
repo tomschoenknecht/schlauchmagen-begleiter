@@ -13,22 +13,20 @@ export default function KontoPage() {
   const qc = useQueryClient();
 
   useEffect(() => {
-    if (window.location.search.includes("checkout=success")) {
-      // Nach der Zahlung den Status direkt von Stripe holen und neu laden.
-      let cancelled = false;
-      (async () => {
-        try {
-          await syncBilling();
-        } catch {
-          /* ignore */
-        }
-        if (!cancelled) qc.invalidateQueries({ queryKey: ["me"] });
-      })();
-      return () => {
-        cancelled = true;
-      };
-    }
-    return undefined;
+    // Bei jedem Konto-Aufruf den Abo-Status direkt von Stripe holen –
+    // so werden auch Kündigungen/Verlängerungen ohne Webhook sichtbar.
+    let cancelled = false;
+    (async () => {
+      try {
+        await syncBilling();
+      } catch {
+        /* ignore */
+      }
+      if (!cancelled) qc.invalidateQueries({ queryKey: ["me"] });
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [qc]);
 
   const tier = data?.tier ?? "free";
