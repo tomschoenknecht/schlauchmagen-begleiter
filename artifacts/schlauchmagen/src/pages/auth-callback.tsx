@@ -41,7 +41,7 @@ export default function AuthCallbackPage() {
       <div className="min-h-screen flex items-center justify-center bg-background px-6">
         <div className="text-center max-w-sm">
           <p className="text-destructive mb-6">{error}</p>
-          <a href="/login" className="underline text-primary hover:no-underline">
+          <a href="/" className="underline text-primary hover:no-underline">
             Zurück zum Login
           </a>
         </div>

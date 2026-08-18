@@ -11,7 +11,7 @@ export function SidebarLayout({ children }: { children: React.ReactNode }) {
 
   const handleLogout = () => {
     clearToken();
-    setLocation("/login");
+    setLocation("/");
   };
 
   const navItems = [

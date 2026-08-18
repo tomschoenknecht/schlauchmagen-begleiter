@@ -1,4 +1,4 @@
-import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
+import { Switch, Route, Redirect, Router as WouterRouter, useLocation } from "wouter";
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -39,7 +39,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!loading && !session) {
-      setLocation("/login");
+      setLocation("/");
     }
   }, [session, loading, setLocation]);
 
@@ -48,20 +48,30 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+// Startseite: anonyme Besucher sehen die Landing (indexierbar), eingeloggte das Dashboard.
+function HomeRoute() {
+  const { session, loading } = useAuth();
+  if (loading) return null;
+  if (session) {
+    return (
+      <SidebarLayout>
+        <DashboardPage />
+      </SidebarLayout>
+    );
+  }
+  return <PasswordPage />;
+}
+
 function Router() {
   return (
     <Switch>
-      <Route path="/login" component={PasswordPage} />
+      <Route path="/login"><Redirect to="/" /></Route>
       <Route path="/auth/callback" component={AuthCallbackPage} />
       <Route path="/onboarding">
         <ProtectedRoute><OnboardingPage /></ProtectedRoute>
       </Route>
       <Route path="/">
-        <ProtectedRoute>
-          <SidebarLayout>
-            <DashboardPage />
-          </SidebarLayout>
-        </ProtectedRoute>
+        <HomeRoute />
       </Route>
       <Route path="/chatbot">
         <ProtectedRoute><SidebarLayout><TierGate need="deluxe" feature="KI-Begleiter" mode="lock"><ChatbotPage /></TierGate></SidebarLayout></ProtectedRoute>
