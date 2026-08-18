@@ -1,0 +1,26 @@
+# bari-guide.de
+
+> Begleitung für Menschen vor und nach einer bariatrischen OP in Deutschland. Von Betroffenen für Betroffene – kein Klinik-Instrument, keine Werbung.
+
+bari-guide.de ist ein unabhängiger Ratgeber und eine digitale Begleit-App für Menschen, die sich mit einer Schlauchmagen- oder Magenbypass-Operation beschäftigen oder diese bereits hinter sich haben. Die Inhalte sind im Erfahrungsbericht-Stil gehalten und erheben keinen medizinischen Anspruch. Entscheidungen über Eingriffe treffen Ärzte und Adipositas-Teams.
+
+## Öffentliche Informationsseiten
+
+- [Schlauchmagen oder Magenbypass – was passt zu mir?](https://bari-guide.de/info/schlauchmagen-oder-bypass): Unterschiede zwischen beiden OPs, Alltagsauswirkungen, wer tendiert wohin
+- [Was fragt man beim ersten Kliniktermin?](https://bari-guide.de/info/kliniktermin-fragen): Konkrete Fragen für das Erstgespräch, was Betroffene bereuen nicht gefragt zu haben
+- [Schlauchmagen: Was danach wirklich passiert](https://bari-guide.de/info/was-danach-passiert): Realistische Erwartungen, Lernkurve, erste Wochen und Monate
+- [Bin ich für eine Bariatrie-OP geeignet?](https://bari-guide.de/info/bin-ich-geeignet): Kriterien (BMI, Begleiterkrankungen), Kostenübernahme, was "konservative Therapie" bedeutet
+- [Schlauchmagen-Risiken – was sagen Betroffene?](https://bari-guide.de/info/risiken-betroffene): Ehrliche Einschätzung ohne Klinik-Spin, häufige Komplikationen und wie sie sich anfühlen
+- [Wie lange dauert der Weg zur OP?](https://bari-guide.de/info/weg-zur-op): Prozess, typische Wartezeiten, Schritte von der ersten Idee bis zur OP
+
+## App-Bereich (Login erforderlich)
+
+Die App unter bari-guide.de bietet nach Anmeldung strukturierte Wochenbegleitung, Gewichtstracking, Ernährungstagebuch, Termin-Checklisten und (im Deluxe-Abo) einen KI-Chat. Zielgruppen: Menschen in der Vorbereitungsphase und in der Nachsorge-Phase nach bariatrischer OP.
+
+## Ton und Haltung
+
+Kein Versprechen. Kein Verkauf. Die App verspricht keine Abkürzung – sie verspricht, dass Betroffene den Weg nicht alleine gehen. Keine Vorher/Nachher-Ästhetik, keine Erfolgsversprechen, keine medizinischen Empfehlungen.
+
+## Kontext Deutschland
+
+Alle Inhalte beziehen sich auf das deutsche Gesundheitssystem: Krankenkassen-Kostenübernahme, DGAV-Leitlinien, Adipositas-Zentren, gesetzliche Nachsorgepflicht.
