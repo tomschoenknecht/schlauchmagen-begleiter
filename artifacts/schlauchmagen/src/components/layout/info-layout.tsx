@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { ArrowLeft } from "lucide-react";
 
 interface InfoLayoutProps {
@@ -8,8 +8,32 @@ interface InfoLayoutProps {
 }
 
 export function InfoLayout({ title, description, children }: InfoLayoutProps) {
+  const [location] = useLocation();
+  const pageUrl = `https://bari-guide.de${location}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: description,
+    url: pageUrl,
+    inLanguage: "de",
+    publisher: {
+      "@type": "Organization",
+      name: "bari-guide",
+      url: "https://bari-guide.de",
+    },
+    author: {
+      "@type": "Organization",
+      name: "bari-guide",
+    },
+  };
+
   return (
     <div className="min-h-screen bg-background font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <header className="border-b bg-card px-6 py-4">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <Link href="/login">
