@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://bari-guide.de/sitemap.xml
