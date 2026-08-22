@@ -57,6 +57,16 @@ app.use(
 );
 app.use(cors());
 
+// www -> Apex (301). Ersetzt die bisherige Cloudflare-Redirect-Rule, sobald www auf Northflank zeigt.
+app.use((req, res, next) => {
+  const host = req.headers.host;
+  if (host && host.toLowerCase().startsWith("www.")) {
+    res.redirect(301, `https://${host.slice(4)}${req.originalUrl}`);
+    return;
+  }
+  next();
+});
+
 // Stripe-Webhook braucht den Raw-Body und muss VOR express.json() stehen.
 app.post(
   "/api/billing/webhook",
