@@ -94,7 +94,8 @@ app.get("/info/:slug", (req, res) => {
     .replace(/<meta property="og:type"[^>]*>/, `<meta property="og:type" content="article" />`)
     .replace(/<meta property="og:url"[^>]*>/, `<meta property="og:url" content="${url}" />`)
     .replace(/<meta property="og:site_name"[^>]*>/, `<meta property="og:site_name" content="bari-guide" />`)
-    .replace(/<meta property="og:locale"[^>]*>/, `<meta property="og:locale" content="de_DE" />`);
+    .replace(/<meta property="og:locale"[^>]*>/, `<meta property="og:locale" content="de_DE" />`)
+    .replace(/<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${url}" />`);
   res.send(patched);
 });
 
