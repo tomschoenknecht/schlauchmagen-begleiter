@@ -84,6 +84,20 @@ app.use("/api", router);
 const frontendDist = path.join(__dirname, "../../schlauchmagen/dist/public");
 app.use(express.static(frontendDist));
 
+// Vorgerenderte Info-Seiten laden. Erzeugt von prerender-info.mjs im
+// schlauchmagen-Paket. Ohne diese Datei liefert der Server fuer /info/* ein
+// leeres <div id="root"> aus - Crawler ohne JavaScript sehen dann nichts.
+let INFO_HTML: Record<string, string> = {};
+try {
+  INFO_HTML = JSON.parse(
+    fs.readFileSync(path.join(frontendDist, "info-prerender.json"), "utf-8"),
+  );
+} catch {
+  logger.warn(
+    "info-prerender.json fehlt - Info-Seiten gehen ohne vorgerenderten Inhalt raus",
+  );
+}
+
 // OG-Tags für /info/*-Seiten serverseitig injizieren
 app.get("/info/:slug", (req, res) => {
   const meta = INFO_META[`/info/${req.params.slug}`];
@@ -94,7 +108,7 @@ app.get("/info/:slug", (req, res) => {
   const indexPath = path.join(frontendDist, "index.html");
   const html = fs.readFileSync(indexPath, "utf-8");
   const url = `https://bari-guide.de/info/${req.params.slug}`;
-  const patched = html
+  let patched = html
     .replace(/<title>.*?<\/title>/, `<title>${meta.title} | bari-guide</title>`)
     .replace(/<meta name="description"[^>]*>/, `<meta name="description" content="${meta.description}" />`)
     .replace(/<meta property="og:title"[^>]*>/, `<meta property="og:title" content="${meta.title}" />`)
@@ -106,6 +120,33 @@ app.get("/info/:slug", (req, res) => {
     .replace(/<meta property="og:site_name"[^>]*>/, `<meta property="og:site_name" content="bari-guide" />`)
     .replace(/<meta property="og:locale"[^>]*>/, `<meta property="og:locale" content="de_DE" />`)
     .replace(/<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${url}" />`);
+
+  // Artikeltext und Schema.org serverseitig einsetzen. React ersetzt den Inhalt
+  // beim Mounten (createRoot), fuer Nutzer aendert sich also nichts - aber
+  // Crawler ohne JavaScript sehen den Text ueberhaupt erst.
+  const inhalt = INFO_HTML[`/info/${req.params.slug}`];
+  if (inhalt) {
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: meta.title,
+      description: meta.description,
+      url,
+      inLanguage: "de",
+      publisher: { "@type": "Organization", name: "bari-guide", url: "https://bari-guide.de" },
+      author: { "@type": "Organization", name: "bari-guide" },
+    };
+    patched = patched
+      .replace(
+        '<div id="root"></div>',
+        `<div id="root">${inhalt}</div>`,
+      )
+      .replace(
+        "</head>",
+        `  <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>\n  </head>`,
+      );
+  }
+
   res.send(patched);
 });
 
