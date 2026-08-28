@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useUpdateProfile } from "@workspace/api-client-react";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 
 type Phase = "planning" | "waiting" | "upcoming" | "post_op";
 
@@ -40,10 +40,12 @@ const phaseIntro: Record<Phase, { heading: string; body: string }> = {
 export default function OnboardingPage() {
   const [step, setStep] = useState<1 | 2>(1);
   const [selected, setSelected] = useState<Phase | null>(null);
+  const [consent, setConsent] = useState(false);
   const [, setLocation] = useLocation();
   const updateProfile = useUpdateProfile();
 
   function handleSelect(phase: Phase) {
+    if (!consent) return;
     setSelected(phase);
     setStep(2);
   }
@@ -67,21 +69,47 @@ export default function OnboardingPage() {
           <>
             <p className="text-sm text-muted-foreground mb-2">Einmalige Frage</p>
             <h1 className="text-2xl font-semibold mb-1">Wo stehst du gerade?</h1>
-            <p className="text-muted-foreground mb-8 text-sm">
+            <p className="text-muted-foreground mb-6 text-sm">
               Die Antwort bestimmt, womit du einsteigst. Du kannst das jederzeit ändern.
             </p>
+
+            <label className="flex items-start gap-3 border border-border rounded-xl px-5 py-4 mb-6 bg-card cursor-pointer">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                className="mt-1 h-4 w-4 shrink-0 accent-primary cursor-pointer"
+              />
+              <span className="text-sm text-muted-foreground leading-relaxed">
+                Ich willige ausdrücklich ein, dass bari-guide meine hier eingegebenen
+                Gesundheitsdaten (z. B. OP-Phase, Gewicht, Tagebuch) zur Bereitstellung der
+                App verarbeitet. Ich kann diese Einwilligung jederzeit widerrufen. Mehr dazu in
+                der{" "}
+                <Link href="/datenschutz">
+                  <span className="underline hover:text-foreground">Datenschutzerklärung</span>
+                </Link>
+                .
+              </span>
+            </label>
+
             <div className="flex flex-col gap-3">
               {phases.map((p) => (
                 <button
                   key={p.id}
                   onClick={() => handleSelect(p.id)}
-                  className="text-left border border-border rounded-xl px-5 py-4 hover:border-foreground transition-colors bg-card"
+                  disabled={!consent}
+                  className="text-left border border-border rounded-xl px-5 py-4 hover:border-foreground transition-colors bg-card disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-border"
                 >
                   <p className="font-medium text-sm">{p.label}</p>
                   <p className="text-muted-foreground text-sm mt-0.5">{p.sub}</p>
                 </button>
               ))}
             </div>
+            {!consent && (
+              <p className="text-xs text-muted-foreground mt-4">
+                Bitte bestätige zuerst die Einwilligung, um fortzufahren.
+              </p>
+            )}
           </>
         )}
 

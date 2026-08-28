@@ -28,6 +28,8 @@ import BeratungSubstitutionPage from "@/pages/beratung-substitution";
 import ChatbotPage from "@/pages/chatbot";
 import UpgradePage from "@/pages/upgrade";
 import KontoPage from "@/pages/konto";
+import ImpressumPage from "@/pages/impressum";
+import DatenschutzPage from "@/pages/datenschutz";
 import { TierGate } from "@/components/feature-gate";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -112,6 +114,8 @@ function Router() {
       <Route path="/gewicht">
         <ProtectedRoute><SidebarLayout><TierGate need="basis" feature="Gewichtsprotokoll" mode="preview"><WeightPage /></TierGate></SidebarLayout></ProtectedRoute>
       </Route>
+      <Route path="/impressum" component={ImpressumPage} />
+      <Route path="/datenschutz" component={DatenschutzPage} />
       <Route path="/info/schlauchmagen-oder-bypass" component={SchlauchmagenOderBypass} />
       <Route path="/info/kliniktermin-fragen" component={KlinikterminFragen} />
       <Route path="/info/was-danach-passiert" component={WasDanachPassiert} />

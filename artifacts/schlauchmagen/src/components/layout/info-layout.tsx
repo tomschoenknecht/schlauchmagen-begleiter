@@ -73,8 +73,13 @@ export function InfoLayout({ title, description, children }: InfoLayoutProps) {
         </div>
       </main>
 
-      <footer className="border-t py-8 px-6 text-center text-xs text-muted-foreground">
-        bari-guide ist kein medizinisches Produkt und ersetzt keine ärztliche Beratung.
+      <footer className="border-t py-8 px-6 text-center text-xs text-muted-foreground space-y-3">
+        <div className="flex items-center justify-center gap-3">
+          <Link href="/impressum"><span className="hover:text-foreground cursor-pointer">Impressum</span></Link>
+          <span>·</span>
+          <Link href="/datenschutz"><span className="hover:text-foreground cursor-pointer">Datenschutz</span></Link>
+        </div>
+        <p>bari-guide ist kein medizinisches Produkt und ersetzt keine ärztliche Beratung.</p>
       </footer>
     </div>
   );

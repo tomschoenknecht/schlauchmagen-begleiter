@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
@@ -256,6 +256,15 @@ export default function PasswordPage() {
           )}
         </div>
       </section>
+
+      <footer className="border-t py-8 px-6 text-center text-xs text-muted-foreground space-y-3">
+        <div className="flex items-center justify-center gap-3">
+          <Link href="/impressum"><span className="hover:text-foreground cursor-pointer">Impressum</span></Link>
+          <span>·</span>
+          <Link href="/datenschutz"><span className="hover:text-foreground cursor-pointer">Datenschutz</span></Link>
+        </div>
+        <p>bari-guide ist kein medizinisches Produkt und ersetzt keine ärztliche Beratung.</p>
+      </footer>
 
     </div>
   );

@@ -59,6 +59,11 @@ export function SidebarLayout({ children }: { children: React.ReactNode }) {
           <LogOut className="h-5 w-5 mr-3" />
           Abmelden
         </Button>
+        <div className="flex items-center gap-2 px-2 pt-3 text-xs text-sidebar-foreground/50">
+          <Link href="/impressum"><span className="hover:text-sidebar-foreground cursor-pointer">Impressum</span></Link>
+          <span>·</span>
+          <Link href="/datenschutz"><span className="hover:text-sidebar-foreground cursor-pointer">Datenschutz</span></Link>
+        </div>
       </div>
     </div>
   );

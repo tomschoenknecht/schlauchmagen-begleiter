@@ -113,7 +113,7 @@
   --sidebar-ring: 172 66% 35%;
   
   --radius: 1rem;
-  --app-font-sans: 'Outfit', sans-serif;
+  --app-font-sans: 'Outfit Variable', 'Outfit', sans-serif;
   --app-font-serif: Georgia, serif;
   --app-font-mono: Menlo, monospace;
 }
