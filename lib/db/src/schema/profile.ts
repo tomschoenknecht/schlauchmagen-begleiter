@@ -8,6 +8,7 @@ export const userProfileTable = pgTable("user_profile", {
   surgeryDate: date("surgery_date"),
   phase: text("phase"),
   onboardingCompleted: boolean("onboarding_completed").notNull().default(false),
+  healthDataConsentAt: timestamp("health_data_consent_at", { withTimezone: true }),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 }, (t) => [unique("user_profile_user_id_unique").on(t.userId)]);
 

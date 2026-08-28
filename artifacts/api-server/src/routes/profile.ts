@@ -34,12 +34,18 @@ router.put("/profile", async (req, res) => {
     onboardingCompleted?: boolean;
   };
   const profile = await getOrCreateProfile(req.userId);
+  // Einwilligung in die Verarbeitung der Gesundheitsdaten wird im Onboarding
+  // ausdruecklich erteilt (Checkbox vor der Phasenauswahl). Wir protokollieren den
+  // Zeitpunkt beim Abschluss des Onboardings einmalig fuer die Nachweisbarkeit (Art. 7 DSGVO).
+  const setConsent =
+    onboardingCompleted === true && !profile.healthDataConsentAt;
   const [updated] = await db
     .update(userProfileTable)
     .set({
       ...(surgeryDate !== undefined && { surgeryDate: surgeryDate ?? null }),
       ...(phase !== undefined && { phase: phase ?? null }),
       ...(onboardingCompleted !== undefined && { onboardingCompleted }),
+      ...(setConsent && { healthDataConsentAt: new Date() }),
       updatedAt: new Date(),
     })
     .where(eq(userProfileTable.id, profile.id))
