@@ -9,6 +9,32 @@ import { requireAuth } from "../middleware/auth";
 
 const router = Router();
 
+// Einfacher In-Memory-Rate-Limiter fuer den Magic-Link-Versand. Verhindert, dass jemand
+// massenhaft Login-Mails an beliebige Adressen ausloest (Mail-Spam / Resend-Kosten).
+// Reicht fuer den aktuellen Single-Instance-Betrieb; bei mehreren Instanzen spaeter durch
+// einen geteilten Speicher (z. B. Redis) ersetzen.
+const MAGIC_LINK_WINDOW_MS = 15 * 60 * 1000; // 15 Minuten
+const MAGIC_LINK_MAX_PER_EMAIL = 3; // pro E-Mail im Fenster
+const MAGIC_LINK_MAX_GLOBAL = 60; // insgesamt im Fenster (grobe Notbremse)
+const magicLinkHits = new Map<string, number[]>();
+
+function tooManyMagicLinks(email: string): boolean {
+  const now = Date.now();
+  const cutoff = now - MAGIC_LINK_WINDOW_MS;
+  for (const [key, times] of magicLinkHits) {
+    const kept = times.filter((t) => t > cutoff);
+    if (kept.length === 0) magicLinkHits.delete(key);
+    else magicLinkHits.set(key, kept);
+  }
+  const globalCount = [...magicLinkHits.values()].reduce((n, t) => n + t.length, 0);
+  const emailHits = magicLinkHits.get(email) ?? [];
+  if (emailHits.length >= MAGIC_LINK_MAX_PER_EMAIL || globalCount >= MAGIC_LINK_MAX_GLOBAL) {
+    return true;
+  }
+  magicLinkHits.set(email, [...emailHits, now]);
+  return false;
+}
+
 router.post("/auth/magic-link", async (req, res) => {
   const { email } = req.body as { email?: string };
   if (!email || typeof email !== "string") {
@@ -17,6 +43,11 @@ router.post("/auth/magic-link", async (req, res) => {
   }
 
   const normalizedEmail = email.trim().toLowerCase();
+
+  if (tooManyMagicLinks(normalizedEmail)) {
+    res.status(429).json({ error: "Zu viele Anfragen. Bitte in einigen Minuten erneut versuchen." });
+    return;
+  }
   const secret = process.env.JWT_SECRET;
   const resendKey = process.env.RESEND_API_KEY;
   if (!secret || !resendKey) {
